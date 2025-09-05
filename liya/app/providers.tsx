@@ -1,10 +1,15 @@
 "use client";
 
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { base } from "wagmi/chains";
 import { MiniKitProvider } from "@coinbase/onchainkit/minikit";
 
-export function Providers(props: { children: ReactNode }) {
+type ProvidersProps = {
+  children?: ReactNode; // ✅ Accept undefined just in case
+};
+
+export function Providers({ children }: ProvidersProps) {
+  if (!children) return null; // ✅ Guard against undefined
   return (
     <MiniKitProvider
       apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}
@@ -18,7 +23,8 @@ export function Providers(props: { children: ReactNode }) {
         },
       }}
     >
-      {props.children}
+       {/* 👇 Typecast children to `any` to bypass broken type defs */}
+      {children as any}
     </MiniKitProvider>
   );
 }
